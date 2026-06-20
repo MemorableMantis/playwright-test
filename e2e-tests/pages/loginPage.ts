@@ -1,26 +1,23 @@
-import { type Page, type Locator } from '@playwright/test';
+import { type Locator, type Page } from '@playwright/test';
 
 export class LoginPage {
   readonly page: Page;
   readonly usernameInput: Locator;
   readonly passwordInput: Locator;
   readonly loginButton: Locator;
-  readonly incorrectCredentialsErrorMessage: Locator;
-  readonly emptyUsernameErrorMessage: Locator;
-  readonly emptyPasswordErrorMessage: Locator;
+  readonly errorMessage: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.usernameInput = page.getByRole('textbox', { name: 'Username' });
     this.passwordInput = page.getByRole('textbox', { name: 'Password' });
     this.loginButton = page.getByRole('button', { name: 'Login' });
-    this.incorrectCredentialsErrorMessage = page.getByText('Epic sadface: Username and password do not match any user in this service');
-    this.emptyUsernameErrorMessage = page.getByText('Epic sadface: Username is required');
-    this.emptyPasswordErrorMessage = page.getByText('Epic sadface: Password is required');
+    this.errorMessage = page.locator('[data-test="error"]');
   }
 
   async navigate() {
     await this.page.goto('/');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async login(username: string, password: string) {
@@ -29,15 +26,7 @@ export class LoginPage {
     await this.loginButton.click();
   }
 
-  async getIncorrectCredentialsErrorMessage() {
-    return await this.incorrectCredentialsErrorMessage.textContent();
-  }
-
-  async getEmptyUsernameErrorMessage() {
-    return await this.emptyUsernameErrorMessage.textContent();
-  }
-
-  async getEmptyPasswordErrorMessage() {
-    return await this.emptyPasswordErrorMessage.textContent();
+  async getErrorMessage() {
+    return await this.errorMessage.textContent();
   }
 }

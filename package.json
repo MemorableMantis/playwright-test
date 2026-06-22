@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "pnpm exec playwright test"
+    "test": "pnpm exec playwright test",
+    "install-deps": "pnpm exec playwright install",
+    "report": "pnpm exect playwright show-report"
   },
   "keywords": [],
   "author": "",
